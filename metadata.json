@@ -1,0 +1,6 @@
+{
+  "name": "Bảng Điều khiển Phân tích Dữ liệu Giải chạy",
+  "description": "Ứng dụng lọc, tìm kiếm, hiển thị và phân tích dữ liệu giải chạy từ tệp TSV với biểu đồ thống kê trực quan và hỗ trợ xuất dữ liệu Excel.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
