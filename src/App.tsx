@@ -23,6 +23,12 @@ const FALLBACK_SEEDS: RaceRecord[] = [
 ];
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem('race_analytics_auth') === '898989';
+  });
+  const [passwordInput, setPasswordInput] = useState('');
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+
   const [records, setRecords] = useState<RaceRecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
@@ -89,6 +95,86 @@ export default function App() {
   useEffect(() => {
     loadTsvData();
   }, []);
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
+        <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-8 shadow-2xl relative overflow-hidden">
+          {/* Subtle decorative glow */}
+          <div className="absolute -top-10 -right-10 w-40 h-40 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"></div>
+          <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none"></div>
+
+          <div className="flex flex-col items-center text-center space-y-6 relative">
+            {/* Logo / Badge */}
+            <div className="w-16 h-16 bg-linear-to-tr from-amber-500 to-amber-600 rounded-2xl flex items-center justify-center font-black text-slate-950 text-2xl shadow-xl shadow-amber-500/15">
+              R
+            </div>
+
+            <div className="space-y-1.5">
+              <h1 className="text-xl font-black text-white uppercase tracking-tight">
+                RACE<span className="text-amber-500">ANALYTICS</span>
+              </h1>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Hệ thống Báo cáo & Phân tích Pivot Trực quan dữ liệu Giải chạy
+              </p>
+            </div>
+
+            <div className="w-full h-px bg-slate-800 my-2"></div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (passwordInput.trim() === '898989') {
+                  localStorage.setItem('race_analytics_auth', '898989');
+                  setIsAuthenticated(true);
+                  setPasswordError(null);
+                } else {
+                  setPasswordError('Mật khẩu nhập chưa chính xác. Vui lòng thử lại!');
+                }
+              }}
+              className="w-full space-y-4"
+            >
+              <div className="space-y-2 text-left">
+                <label htmlFor="password-field" className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
+                  Nhập Mật khẩu Truy cập
+                </label>
+                <input
+                  id="password-field"
+                  type="password"
+                  placeholder="••••••"
+                  value={passwordInput}
+                  onChange={(e) => {
+                    setPasswordInput(e.target.value);
+                    if (passwordError) setPasswordError(null);
+                  }}
+                  className="w-full px-4 py-3 bg-slate-950 border border-slate-800 rounded-xl text-center text-white tracking-widest text-lg font-bold focus:outline-hidden focus:border-amber-500 focus:ring-2 focus:ring-amber-500/10 transition-all placeholder:text-slate-700"
+                  autoFocus
+                />
+              </div>
+
+              {passwordError && (
+                <div className="flex items-center gap-2 p-3 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-xl text-xs text-left font-medium">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>{passwordError}</span>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                className="w-full py-3.5 px-4 bg-amber-500 hover:bg-amber-400 active:scale-98 transition-all font-extrabold text-slate-950 text-xs uppercase tracking-wider rounded-xl cursor-pointer shadow-lg shadow-amber-500/10 flex items-center justify-center gap-2"
+              >
+                <span>Xác nhận Truy cập</span>
+              </button>
+            </form>
+
+            <p className="text-[10px] text-slate-500 pt-2 font-mono">
+              Hệ thống Bảo mật Cổng thông tin Admin BTC
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 antialiased font-sans flex flex-col justify-between">
